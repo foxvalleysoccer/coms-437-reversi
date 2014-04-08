@@ -11,3 +11,7 @@
 /*.userprefs
 /*.pidb
 /*.booproj
+
+.DS_Store
+*.pdb
+reversi_Data/output_log.txt
