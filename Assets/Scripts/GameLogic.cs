@@ -8,8 +8,6 @@ public class GameLogic : MonoBehaviour
 {
 	public Board board;
 
-	private const int MINIMAX_DEPTH = 5;
-
 	private Player turn;
 
 	//True if the most recent turn has been skipped
@@ -18,6 +16,8 @@ public class GameLogic : MonoBehaviour
 	public TextManager TextManager;
 
 	public Player Turn { get{ return turn; } }
+
+	public int difficulty;
 
 	public void SetTurn(Player toSet)
 	{
@@ -65,6 +65,8 @@ public class GameLogic : MonoBehaviour
 	// Use this for initialization
 	IEnumerator Start ()
 	{
+		difficulty = PlayerPrefs.GetInt ("Difficulty");
+
 		SetTurn (Player.PLAYER_ONE);
 		
 		while (true)
@@ -222,7 +224,7 @@ public class GameLogic : MonoBehaviour
 		bw.DoWork += new DoWorkEventHandler(
 			delegate(object o, DoWorkEventArgs args)
 			{
-				Tuple<Player[], double> result = Minimax (currentBoardState, MINIMAX_DEPTH, Turn, true);
+				Tuple<Player[], double> result = Minimax (currentBoardState, difficulty/2, Turn, true);
 				print(result.Second);
 				bestBoardState = result.First;
 				
