@@ -6,6 +6,7 @@ public class TextManager : MonoBehaviour {
 	public TextMesh TurnIndicator;
 	public TextMesh ScoreStringP1;
 	public TextMesh ScoreStringP2;
+	public TextMesh DifficultyString;
 	public Transform ExamplePieceLocation;
 
 	public Board Board;
@@ -13,7 +14,7 @@ public class TextManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+		DifficultyString.text = "AI Difficulty: " + PlayerPrefs.GetInt ("Difficulty");
 	}
 	
 	// Update is called once per frame

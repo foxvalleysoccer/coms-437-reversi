@@ -10,6 +10,15 @@ public class MenuGUI : MonoBehaviour {
 	{
 		PlayerPrefs.SetInt ("Difficulty", 3);
 	}
+
+	public void Update()
+	{
+		if (Input.GetKeyDown(KeyCode.Escape))
+		{
+			Application.Quit();
+		}
+	}
+
 	public void OnGUI()
 	{
 		//Title

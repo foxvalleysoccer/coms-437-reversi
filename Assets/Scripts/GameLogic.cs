@@ -224,7 +224,7 @@ public class GameLogic : MonoBehaviour
 		bw.DoWork += new DoWorkEventHandler(
 			delegate(object o, DoWorkEventArgs args)
 			{
-				Tuple<Player[], double> result = Minimax (currentBoardState, difficulty/2, Turn, true);
+				Tuple<Player[], double> result = Minimax (currentBoardState, (difficulty+1)/2, Turn, true);
 				print(result.Second);
 				bestBoardState = result.First;
 				
@@ -257,7 +257,6 @@ public class GameLogic : MonoBehaviour
 						}
 					}
 				}
-
 				//Make dat move
 				MoveAttempt(board.GetTileAt(i));
 
@@ -343,14 +342,12 @@ public class GameLogic : MonoBehaviour
 	{
 		const float cornerPrecedence = 200;
 		float countTemp;
+		int myTiles;
+		int opponentTiles;
 
 		double score = 0f;
 		Player thisPlayer = Player.PLAYER_TWO;
 		Player opponent = Player.PLAYER_ONE;
-
-
-		//If we've won, straight up RETURN A KICKASS SCORE
-		//TODO
 
 		//Boost score if we have a corner
 		countTemp = 0;
@@ -358,7 +355,7 @@ public class GameLogic : MonoBehaviour
 		if (boardState [7]  == thisPlayer) countTemp++;
 		if (boardState [56] == thisPlayer) countTemp++;
 		if (boardState [63] == thisPlayer) countTemp++;
-		score += cornerPrecedence * countTemp;
+		score += cornerPrecedence * countTemp * (difficulty / 10);
 
 		//Lower score if opponent has a corner
 		countTemp = 0;
@@ -366,7 +363,7 @@ public class GameLogic : MonoBehaviour
 		if (boardState [7]  == opponent) countTemp++;
 		if (boardState [56] == opponent) countTemp++;
 		if (boardState [63] == opponent) countTemp++;
-		score -= cornerPrecedence * countTemp;
+		score -= cornerPrecedence * countTemp * (difficulty / 10);
 
 		//Lower score if we have a tile adjacent to the corner
 		countTemp = 0;
@@ -382,7 +379,7 @@ public class GameLogic : MonoBehaviour
 		if (boardState [55]  == thisPlayer) countTemp++;
 		if (boardState [54]  == thisPlayer) countTemp++;
 		if (boardState [62]  == thisPlayer) countTemp++;
-		score -= cornerPrecedence * countTemp / 4;
+		score -= cornerPrecedence * countTemp / 4 * (difficulty / 10);
 
 		//Raise score if opponent has a tile adjacent to the corner
 		countTemp = 0;
@@ -398,11 +395,29 @@ public class GameLogic : MonoBehaviour
 		if (boardState [55]  == opponent) countTemp++;
 		if (boardState [54]  == opponent) countTemp++;
 		if (boardState [62]  == opponent) countTemp++;
-		score += cornerPrecedence * countTemp / 4;
+		score += cornerPrecedence * countTemp / 4 * (difficulty / 10);
+
+		//Factor in edge tiles
+		myTiles = 0;
+		opponentTiles = 0;
+		for(int i = 0; i < 64; i++)
+		{
+			if(i / 8 == 0 ||
+			   i / 8 == 7 ||
+			   i % 8 == 0 ||
+			   i % 8 == 7)
+			{
+				if(boardState[i] == Player.PLAYER_ONE) myTiles++;
+				if(boardState[i] == Player.PLAYER_TWO) opponentTiles++;
+			}
+		}
+		score += myTiles * 20 * (difficulty / 10);
+		score -= opponentTiles - 20 * (difficulty / 10);
+
 
 		//Adjust score based on a "softened" tile ratio
-		int opponentTiles = 0;
-		int myTiles = 0;
+		opponentTiles = 0;
+		myTiles = 0;
 		for(int i = 0; i < 64; i++)
 		{
 			if(boardState[i]== thisPlayer)
@@ -419,7 +434,7 @@ public class GameLogic : MonoBehaviour
 		opponentTiles += 2;
 		float tileRatio = (float)myTiles / (float)opponentTiles;
 		//score += (tileRatio>=0)? Math.Sqrt (1 - tileRatio) * 5 : -Math.Sqrt(Math.Abs(1 - tileRatio)) * 5;
-		score += (tileRatio - 1) * 10;
+		score += (tileRatio - 1) * 10 * (10/difficulty);
 
 		return (float)score;
 	}
@@ -436,43 +451,17 @@ public class GameLogic : MonoBehaviour
 				}
 			}
 		}
-
 		return true;
 	}
-
-
+	
 	// Update is called once per frame
 	void Update ()
 	{
-
+		if (Input.GetKeyDown(KeyCode.Escape))
+			Application.LoadLevel("main_menu");
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 public class Tuple<T1, T2>
 {
