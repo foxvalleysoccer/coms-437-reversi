@@ -219,7 +219,7 @@ public class GameLogic : MonoBehaviour
 		bw.DoWork += new DoWorkEventHandler(
 			delegate(object o, DoWorkEventArgs args)
 			{
-			Tuple<Player[], double> result = Minimax (currentBoardState, 1, Turn, true);
+			Tuple<Player[], double> result = Minimax (currentBoardState, 3, Turn, true);
 			print(result.Second);
 			bestBoardState = result.First;
 			
@@ -276,7 +276,7 @@ public class GameLogic : MonoBehaviour
 		bw.DoWork += new DoWorkEventHandler(
 			delegate(object o, DoWorkEventArgs args)
 			{
-				Tuple<Player[], double> result = Minimax (currentBoardState, (difficulty+1)/2, Turn, true);
+				Tuple<Player[], double> result = Minimax (currentBoardState, (difficulty+2)/2, Turn, true);
 				print(result.Second);
 				bestBoardState = result.First;
 				
@@ -431,7 +431,7 @@ public class GameLogic : MonoBehaviour
 		if (boardState [55]  == thisPlayer) countTemp++;
 		if (boardState [54]  == thisPlayer) countTemp++;
 		if (boardState [62]  == thisPlayer) countTemp++;
-		score -= cornerPrecedence * countTemp / 4 * (difficulty / 10);
+		//score -= cornerPrecedence * countTemp / 4 * (difficulty / 10);
 
 		//Raise score if opponent has a tile adjacent to the corner
 		countTemp = 0;
@@ -447,7 +447,7 @@ public class GameLogic : MonoBehaviour
 		if (boardState [55]  == opponent) countTemp++;
 		if (boardState [54]  == opponent) countTemp++;
 		if (boardState [62]  == opponent) countTemp++;
-		score += cornerPrecedence * countTemp / 4 * (difficulty / 10);
+		//score += cornerPrecedence * countTemp / 4 * (difficulty / 10);
 
 		//Factor in edge tiles
 		myTiles = 0;
@@ -459,8 +459,8 @@ public class GameLogic : MonoBehaviour
 			   i % 8 == 0 ||
 			   i % 8 == 7)
 			{
-				if(boardState[i] == Player.PLAYER_ONE) myTiles++;
-				if(boardState[i] == Player.PLAYER_TWO) opponentTiles++;
+				if(boardState[i] == thisPlayer) myTiles++;
+				if(boardState[i] == opponent) opponentTiles++;
 			}
 		}
 		score += myTiles * 20 * (difficulty / 10);
@@ -486,7 +486,7 @@ public class GameLogic : MonoBehaviour
 		opponentTiles += 2;
 		float tileRatio = (float)myTiles / (float)opponentTiles;
 		//score += (tileRatio>=0)? Math.Sqrt (1 - tileRatio) * 5 : -Math.Sqrt(Math.Abs(1 - tileRatio)) * 5;
-		score += (tileRatio - 1) * 10 * (10/difficulty);
+		score += (tileRatio - 1) * 10 * (float)20/difficulty;
 
 		return (float)score;
 	}
