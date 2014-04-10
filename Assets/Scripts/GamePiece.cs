@@ -24,11 +24,10 @@ public class GamePiece : MonoBehaviour {
 			}
 			
 		}
-	}
 
-	void FixedUpdate()
-	{
-		if(rigidbody.velocity.magnitude < .00001 && rigidbody.angularVelocity.magnitude < .000001)
+
+
+		if(rigidbody.velocity.magnitude < .0001 && rigidbody.angularVelocity.magnitude < .00001)
 		{
 			//If we're not right-side up, flip
 			if(whiteUp && rigidbody.rotation.eulerAngles.z > 30 && rigidbody.rotation.eulerAngles.z < 330)
@@ -41,16 +40,18 @@ public class GamePiece : MonoBehaviour {
 				StartCoroutine (flipTileCoroutine ());
 				return;
 			}
-
+			
 			if (!EqualWithTolerance(rigidbody.position.x, boundXZ.x))
 			{
 				float xVal = 100 * (boundXZ.x - rigidbody.position.x);
+				rigidbody.velocity += Vector3.up;
 				rigidbody.AddForce(new Vector3(xVal, 400, 0));
 				Stable = false;
 			}
 			else if (!EqualWithTolerance(rigidbody.position.z, boundXZ.z))
 			{ 
 				float zVal = 100 * (boundXZ.z - rigidbody.position.z);
+				rigidbody.velocity += Vector3.up;
 				rigidbody.AddForce(new Vector3(0, 400, zVal));
 				Stable = false;
 			}
@@ -63,6 +64,47 @@ public class GamePiece : MonoBehaviour {
 		{
 			Stable = false;
 		}
+	}
+
+	void FixedUpdate()
+	{
+//		if(rigidbody.velocity.magnitude < .0001 && rigidbody.angularVelocity.magnitude < .00001)
+//		{
+//			//If we're not right-side up, flip
+//			if(whiteUp && rigidbody.rotation.eulerAngles.z > 30 && rigidbody.rotation.eulerAngles.z < 330)
+//			{
+//				StartCoroutine (flipTileCoroutine ());
+//				return;
+//			}
+//			if(!whiteUp && rigidbody.rotation.eulerAngles.z < 150)
+//			{
+//				StartCoroutine (flipTileCoroutine ());
+//				return;
+//			}
+//
+//			if (!EqualWithTolerance(rigidbody.position.x, boundXZ.x))
+//			{
+//				float xVal = 100 * (boundXZ.x - rigidbody.position.x);
+//				rigidbody.velocity += Vector3.up;
+//				rigidbody.AddForce(new Vector3(xVal, 400, 0));
+//				Stable = false;
+//			}
+//			else if (!EqualWithTolerance(rigidbody.position.z, boundXZ.z))
+//			{ 
+//				float zVal = 100 * (boundXZ.z - rigidbody.position.z);
+//				rigidbody.velocity += Vector3.up;
+//				rigidbody.AddForce(new Vector3(0, 400, zVal));
+//				Stable = false;
+//			}
+//			else
+//			{
+//				Stable = true;
+//			}
+//		}
+//		else
+//		{
+//			Stable = false;
+//		}
 	}
 
 	bool EqualWithTolerance(float one, float two)

@@ -202,9 +202,61 @@ public class GameLogic : MonoBehaviour
 	IEnumerator PlayerChoice()
 	{
 		print ("Player's turn!");
-		while (Turn == Player.PLAYER_ONE)
+//		while (Turn == Player.PLAYER_ONE)
+//		{
+//			yield return null;
+//		}
+		
+		bool minimaxFinished = false;
+		bool allTilesStable = false;
+		
+		Player[] currentBoardState = board.GetUpdatedBoardModel ();
+		Player[] bestBoardState = null;
+		
+		//Run minimax
+		BackgroundWorker bw = new BackgroundWorker ();
+		
+		bw.DoWork += new DoWorkEventHandler(
+			delegate(object o, DoWorkEventArgs args)
+			{
+			Tuple<Player[], double> result = Minimax (currentBoardState, 1, Turn, true);
+			print(result.Second);
+			bestBoardState = result.First;
+			
+			minimaxFinished = true;
+		});
+		
+		bw.RunWorkerAsync();
+		
+		yield return new WaitForSeconds(.3f);
+		
+		while(!minimaxFinished)
 		{
 			yield return null;
+		}
+		
+		for(int i = 0; i < 64; i++)
+		{
+			if(bestBoardState[i] == Turn && currentBoardState[i] == Player.NO_PLAYER)
+			{
+				//Ensure all existing pieces are stable
+				while(allTilesStable == false)
+				{
+					allTilesStable = true;
+					for(int j = 0; j < 64; j++)
+					{
+						if((board.GetTileAt(j).piece != null) && (!board.GetTileAt(j).piece.Stable))
+						{
+							allTilesStable = false;
+							yield return null;
+						}
+					}
+				}
+				//Make dat move
+				MoveAttempt(board.GetTileAt(i));
+				
+				SetTurn(Player.PLAYER_TWO);
+			}
 		}
 	}
 	
