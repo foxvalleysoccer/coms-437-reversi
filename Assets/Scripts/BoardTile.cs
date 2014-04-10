@@ -56,7 +56,9 @@ public class BoardTile : MonoBehaviour {
 
 			GameObject gobj = Instantiate (Resources.Load("Prefabs/GamePiece"), placementCoords, rotation) as GameObject;
 			piece = gobj.GetComponent(typeof(GamePiece)) as GamePiece;
-			
+
+			piece.whiteUp = (owner == Player.PLAYER_ONE);
+
 			occupied = true;
 		}
 		else if(occupied && owner != Owner) //Tile is already occupied, switch owner

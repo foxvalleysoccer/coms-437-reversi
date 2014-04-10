@@ -6,6 +6,8 @@ public class GamePiece : MonoBehaviour {
 
 	public bool Stable = true;
 
+	public bool whiteUp = true;
+
 	// Use this for initialization
 	void Start () {
 		boundXZ = new Vector3(rigidbody.position.x, 0, rigidbody.position.z);
@@ -26,16 +28,30 @@ public class GamePiece : MonoBehaviour {
 
 	void FixedUpdate()
 	{
-		if(rigidbody.velocity.magnitude < .001 && rigidbody.angularVelocity.magnitude < .0001)
+		if(rigidbody.velocity.magnitude < .00001 && rigidbody.angularVelocity.magnitude < .000001)
 		{
+			//If we're not right-side up, flip
+			if(whiteUp && rigidbody.rotation.eulerAngles.z > 30 && rigidbody.rotation.eulerAngles.z < 330)
+			{
+				StartCoroutine (flipTileCoroutine ());
+				return;
+			}
+			if(!whiteUp && rigidbody.rotation.eulerAngles.z < 150)
+			{
+				StartCoroutine (flipTileCoroutine ());
+				return;
+			}
+
 			if (!EqualWithTolerance(rigidbody.position.x, boundXZ.x))
 			{
-				rigidbody.AddForce(new Vector3(rigidbody.position.x> boundXZ.x?-100:100, 0, 0));
+				float xVal = 100 * (boundXZ.x - rigidbody.position.x);
+				rigidbody.AddForce(new Vector3(xVal, 400, 0));
 				Stable = false;
 			}
 			else if (!EqualWithTolerance(rigidbody.position.z, boundXZ.z))
 			{ 
-				rigidbody.AddForce(new Vector3(0, 0, rigidbody.position.z>boundXZ.z? -100:100));
+				float zVal = 100 * (boundXZ.z - rigidbody.position.z);
+				rigidbody.AddForce(new Vector3(0, 400, zVal));
 				Stable = false;
 			}
 			else
@@ -63,7 +79,9 @@ public class GamePiece : MonoBehaviour {
 
 	public void flipTile()
 	{
+		rigidbody.velocity += Vector3.up;
 		StartCoroutine (flipTileCoroutine ());
+		whiteUp = !whiteUp;
 	}
 
 	private IEnumerator flipTileCoroutine()
@@ -76,21 +94,9 @@ public class GamePiece : MonoBehaviour {
 			yield return new WaitForSeconds(.05f);
 		}
 		yield return new WaitForSeconds(.15f);
+
 		//rigidbody.AddForce (Vector3.up * 100);
 		rigidbody.AddTorque (0, 0, 8);
-
 		rigidbody.useGravity = true;
-	}
-
-	IEnumerator doubleFlipTile()
-	{
-		//TODO fix
-		while (rigidbody.position.y < 2)
-		{
-			rigidbody.AddForce (Vector3.up * 50);
-			yield return new WaitForSeconds(.05f);
-		}
-		yield return new WaitForSeconds(.25f);
-		rigidbody.AddForceAtPosition (Vector3.up * 140, rigidbody.position + Vector3.left * rigidbody.transform.localScale.x);
 	}
 }
