@@ -202,62 +202,62 @@ public class GameLogic : MonoBehaviour
 	IEnumerator PlayerChoice()
 	{
 		print ("Player's turn!");
-//		while (Turn == Player.PLAYER_ONE)
-//		{
-//			yield return null;
-//		}
-		
-		bool minimaxFinished = false;
-		bool allTilesStable = false;
-		
-		Player[] currentBoardState = board.GetUpdatedBoardModel ();
-		Player[] bestBoardState = null;
-		
-		//Run minimax
-		BackgroundWorker bw = new BackgroundWorker ();
-		
-		bw.DoWork += new DoWorkEventHandler(
-			delegate(object o, DoWorkEventArgs args)
-			{
-			Tuple<Player[], double> result = Minimax (currentBoardState, 3, Turn, true);
-			print(result.Second);
-			bestBoardState = result.First;
-			
-			minimaxFinished = true;
-		});
-		
-		bw.RunWorkerAsync();
-		
-		yield return new WaitForSeconds(.3f);
-		
-		while(!minimaxFinished)
+		while (Turn == Player.PLAYER_ONE)
 		{
 			yield return null;
 		}
-		
-		for(int i = 0; i < 64; i++)
-		{
-			if(bestBoardState[i] == Turn && currentBoardState[i] == Player.NO_PLAYER)
-			{
-				//Ensure all existing pieces are stable
-				while(allTilesStable == false)
-				{
-					allTilesStable = true;
-					for(int j = 0; j < 64; j++)
-					{
-						if((board.GetTileAt(j).piece != null) && (!board.GetTileAt(j).piece.Stable))
-						{
-							allTilesStable = false;
-							yield return null;
-						}
-					}
-				}
-				//Make dat move
-				MoveAttempt(board.GetTileAt(i));
-				
-				SetTurn(Player.PLAYER_TWO);
-			}
-		}
+//		
+//		bool minimaxFinished = false;
+//		bool allTilesStable = false;
+//		
+//		Player[] currentBoardState = board.GetUpdatedBoardModel ();
+//		Player[] bestBoardState = null;
+//		
+//		//Run minimax
+//		BackgroundWorker bw = new BackgroundWorker ();
+//		
+//		bw.DoWork += new DoWorkEventHandler(
+//			delegate(object o, DoWorkEventArgs args)
+//			{
+//			Tuple<Player[], double> result = Minimax (currentBoardState, 3, Turn, true);
+//			print(result.Second);
+//			bestBoardState = result.First;
+//			
+//			minimaxFinished = true;
+//		});
+//		
+//		bw.RunWorkerAsync();
+//		
+//		yield return new WaitForSeconds(.3f);
+//		
+//		while(!minimaxFinished)
+//		{
+//			yield return null;
+//		}
+//		
+//		for(int i = 0; i < 64; i++)
+//		{
+//			if(bestBoardState[i] == Turn && currentBoardState[i] == Player.NO_PLAYER)
+//			{
+//				//Ensure all existing pieces are stable
+//				while(allTilesStable == false)
+//				{
+//					allTilesStable = true;
+//					for(int j = 0; j < 64; j++)
+//					{
+//						if((board.GetTileAt(j).piece != null) && (!board.GetTileAt(j).piece.Stable))
+//						{
+//							allTilesStable = false;
+//							yield return null;
+//						}
+//					}
+//				}
+//				//Make dat move
+//				MoveAttempt(board.GetTileAt(i));
+//				
+//				SetTurn(Player.PLAYER_TWO);
+//			}
+//		}
 	}
 	
 	IEnumerator AIChoice()
@@ -418,35 +418,35 @@ public class GameLogic : MonoBehaviour
 		score -= cornerPrecedence * countTemp * (difficulty / 10);
 
 		//Lower score if we have a tile adjacent to the corner
-		countTemp = 0;
-		if (boardState [1]  == thisPlayer) countTemp++;
-		if (boardState [8]  == thisPlayer) countTemp++;
-		if (boardState [9]  == thisPlayer) countTemp++;
-		if (boardState [6]  == thisPlayer) countTemp++;
-		if (boardState [14]  == thisPlayer) countTemp++;
-		if (boardState [15]  == thisPlayer) countTemp++;
-		if (boardState [48]  == thisPlayer) countTemp++;
-		if (boardState [49]  == thisPlayer) countTemp++;
-		if (boardState [57]  == thisPlayer) countTemp++;
-		if (boardState [55]  == thisPlayer) countTemp++;
-		if (boardState [54]  == thisPlayer) countTemp++;
-		if (boardState [62]  == thisPlayer) countTemp++;
+//		countTemp = 0;
+//		if (boardState [1]  == thisPlayer) countTemp++;
+//		if (boardState [8]  == thisPlayer) countTemp++;
+//		if (boardState [9]  == thisPlayer) countTemp++;
+//		if (boardState [6]  == thisPlayer) countTemp++;
+//		if (boardState [14]  == thisPlayer) countTemp++;
+//		if (boardState [15]  == thisPlayer) countTemp++;
+//		if (boardState [48]  == thisPlayer) countTemp++;
+//		if (boardState [49]  == thisPlayer) countTemp++;
+//		if (boardState [57]  == thisPlayer) countTemp++;
+//		if (boardState [55]  == thisPlayer) countTemp++;
+//		if (boardState [54]  == thisPlayer) countTemp++;
+//		if (boardState [62]  == thisPlayer) countTemp++;
 		//score -= cornerPrecedence * countTemp / 4 * (difficulty / 10);
 
 		//Raise score if opponent has a tile adjacent to the corner
-		countTemp = 0;
-		if (boardState [1]  == opponent) countTemp++;
-		if (boardState [8]  == opponent) countTemp++;
-		if (boardState [9]  == opponent) countTemp++;
-		if (boardState [6]  == opponent) countTemp++;
-		if (boardState [14]  == opponent) countTemp++;
-		if (boardState [15]  == opponent) countTemp++;
-		if (boardState [48]  == opponent) countTemp++;
-		if (boardState [49]  == opponent) countTemp++;
-		if (boardState [57]  == opponent) countTemp++;
-		if (boardState [55]  == opponent) countTemp++;
-		if (boardState [54]  == opponent) countTemp++;
-		if (boardState [62]  == opponent) countTemp++;
+//		countTemp = 0;
+//		if (boardState [1]  == opponent) countTemp++;
+//		if (boardState [8]  == opponent) countTemp++;
+//		if (boardState [9]  == opponent) countTemp++;
+//		if (boardState [6]  == opponent) countTemp++;
+//		if (boardState [14]  == opponent) countTemp++;
+//		if (boardState [15]  == opponent) countTemp++;
+//		if (boardState [48]  == opponent) countTemp++;
+//		if (boardState [49]  == opponent) countTemp++;
+//		if (boardState [57]  == opponent) countTemp++;
+//		if (boardState [55]  == opponent) countTemp++;
+//		if (boardState [54]  == opponent) countTemp++;
+//		if (boardState [62]  == opponent) countTemp++;
 		//score += cornerPrecedence * countTemp / 4 * (difficulty / 10);
 
 		//Factor in edge tiles
