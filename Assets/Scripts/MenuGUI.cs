@@ -3,9 +3,6 @@ using System.Collections;
 
 public class MenuGUI : MonoBehaviour {
 
-	public float X;
-	public float Y;
-
 	public void Start()
 	{
 		PlayerPrefs.SetInt ("Difficulty", 3);

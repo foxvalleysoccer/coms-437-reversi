@@ -51,8 +51,34 @@ public class GameLogic : MonoBehaviour
 		{
 			if(turnSkipped)
 			{
-				print ("Stalemate Detected!");
-				//TODO set winner
+				print ("Stalemate Detected");
+
+				//Determine winner
+				int playerPieces = 0;
+				int aiPieces     = 0;
+
+				foreach(Player p in board.GetUpdatedBoardModel())
+				{
+					if(p == Player.PLAYER_ONE) playerPieces++;
+					if(p == Player.PLAYER_TWO) aiPieces    ++;
+				}
+
+				if(playerPieces > aiPieces)
+				{
+					//Human wins
+					PlayerPrefs.SetString("Winner", "Human Player");
+				}
+				else if(playerPieces < aiPieces)
+				{
+					//AI wins
+					PlayerPrefs.SetString("Winner", "AI");
+				}
+				else
+				{
+					//Tie game
+					PlayerPrefs.SetString("Winner", "Nobody");
+				}
+				FindObjectOfType<PostgameGUI>().ShowGUI = true;
 			}
 			else
 			{
